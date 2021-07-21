@@ -3,13 +3,13 @@ require "../vendor/autoload.php";
 
 use App\Controller\HomeController;
 use App\Controller\LoginController;
-//use Slim\App;
+use App\Controller\LogoutController;
 use Slim\Views\PhpRenderer;
 
 $config['displayErrorDetails'] = true;
 $config['db']['host'] = 'localhost';
 $config['db']['user'] = 'root';
-$config['db']['password'] = '123';
+$config['db']['password'] = '';
 $config['db']['dbname'] = 'efco';
 
 $app = new Core\App(['settings' => $config]);
@@ -24,18 +24,12 @@ $container['pdo'] = function ($c) {
     return $pdo;
 };
 
-//$app->get('/', function () {
-//    echo "You are login in";
-//});
-
-//$app->get("/", HomeController::class . ':get');
-
 $app->get("/", HomeController::class);
 
 $app->get("/login", LoginController::class);
 $app->post("/login", LoginController::class);
 
-
+$app->get("/logout", LogoutController::class);
 
 try {
     $app->run();
