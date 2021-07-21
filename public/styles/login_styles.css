@@ -1,0 +1,92 @@
+html, body{
+    padding: 0;
+    margin: 0;
+    font-family: monospace;
+    font-weight: normal;
+    font-size: 25px;
+    text-align: center;
+}
+
+.login_box{
+    width: 350px;
+    height: 270px;
+    background-color: #fff;
+    border: 2px solid #333;
+    margin: 150px auto 0 auto;
+    padding: 20px 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.login_form{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+    width: 90%;
+    margin: auto;
+}
+
+.input{
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2px 5px;
+    border-radius: 0;
+    border-bottom: 2px solid #333;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    height: 30px;
+    font-family: monospace;
+    font-size: 16px;
+}
+
+input[type="checkbox"]{
+    border: #333 solid 2px;
+    border-radius: 0;
+    margin: 0;
+    width: 15px;
+    height: 15px;
+    appearance: none;
+}
+
+input[type="checkbox"]:hover{
+    cursor: pointer;
+}
+
+.checkbox_label:hover{
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked{
+    background-color: #333333;
+}
+
+.chbox{
+    margin-top: 15px;
+    text-align: left;
+}
+
+.checkbox_label{
+    vertical-align: middle;
+    font-size: 16px;
+}
+
+.btn_submit{
+
+    font-family: monospace;
+    background: transparent;
+    border: 2px solid #333;
+    font-size: 18px;
+    width: 100px;
+    height: 40px;
+    margin: auto auto 10px auto;
+    transition: color 300ms, background-color 300ms;
+}
+
+.btn_submit:hover{
+    cursor: pointer;
+    background-color: #333333;
+    color: white;
+}

@@ -1,0 +1,25 @@
+<html lang="ru">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="/styles/login_styles.css">
+</head>
+<body>
+
+<div class="login_box">
+    <div style="margin-bottom: 30px;">Авторизация</div>
+    <form method="post" name="login_form" class="login_form" action="/login">
+        <input name="email" placeholder="e-mail" class="input"><br>
+        <input name="password" type="password" placeholder="password" class="input">
+        <div class="chbox">
+            <input type="checkbox" id="show_pass">
+            <label class="checkbox_label" for="show_pass">Показать пароль</label>
+        </div>
+        <button type="submit" name="submit" class="btn_submit">Войти</button>
+    </form>
+</div>
+<div style="margin-top: 10px; color: red; font-size: 16px;">
+    <?=$error?>
+</div>
+</body>
+</html>

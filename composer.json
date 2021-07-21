@@ -1,0 +1,24 @@
+{
+  "name": "vendor_name/efco",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Dmitriy",
+      "email": "d.prysenko@ya.ru"
+    }
+  ],
+  "require": {
+    "slim/slim": "3.12.3",
+    "slim/php-view": "*",
+    "squizlabs/php_codesniffer": "3.6.0",
+    "ext-pdo": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\Controller\\": "controllers/",
+      "Core\\": "app/"
+    }
+  }
+}
