@@ -5,7 +5,9 @@
 </head>
 <body>
     <div>Поздравляю, гений, теперь ты можешь посмотреть на жидкое золото</div><br>
-    <a href="/logout">Выйти</a>
+    <?=$role?><br>
+    <?=$router->pathFor('logout.action')?>
+    <a href="<?=$router->pathFor('logout.action')?>">Выйти</a>
     <img width="100%" src="/assets/liquid_gold.jpg">
 </body>
 </html>

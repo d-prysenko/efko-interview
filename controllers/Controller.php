@@ -3,41 +3,25 @@
 namespace App\Controller;
 
 use Psr\Container\ContainerInterface;
-use Slim\Http\Request;
-use Slim\Http\Response;
 
 class Controller
 {
-    protected Request $req;
-    protected Response $res;
-    protected array $args;
     protected ContainerInterface $container;
     protected array $params;
 
-    public function __construct(Request $req, Response $res, array $args, ContainerInterface $container)
+    public function __construct(ContainerInterface $container)
     {
-        $this->req = $req;
-        $this->res = $res;
-        $this->args = $args;
         $this->container = $container;
     }
 
-    public function __get($prop)
+    public function render($res, $template, $params = [])
     {
-        if ($this->container->{$prop}) {
-            return $this->container->{$prop};
-        }
-        return null;
+        return $this->container->get('view')->render($res, $template, $params);
     }
 
-    public function render($url, $params = [])
+    public function pathFor($route_name): string
     {
-        return $this->container->get('view')->render($this->res, $url, $params);
-    }
-
-    public function redirect($url): Response
-    {
-        return $this->res->withRedirect($url);
+        return $this->container->get('router')->pathFor($route_name);
     }
 
     public function isAuth(): bool
@@ -59,21 +43,4 @@ class Controller
         }
         return false;
     }
-
-    public function get(): Response
-    {
-        if ($this->isAuth() == false) {
-            return $this->redirect('/login');
-        }
-        return $this->res->write("Unknown page");
-    }
-
-    public function post(): Response
-    {
-        if ($this->isAuth() == false) {
-            return $this->redirect('/login');
-        }
-        return $this->res->write("Unknown page");
-    }
-
 }

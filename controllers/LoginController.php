@@ -17,6 +17,7 @@ class LoginController extends Controller
         $stmt = $db->prepare("SELECT * FROM users WHERE `email`= ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch();
+
         if ($user && password_verify($password . $user['salt'], $user['hash'])) {
             return $user['id'];
         }
@@ -24,18 +25,29 @@ class LoginController extends Controller
         return 0;
     }
 
-    public function get(): Response
+    public function signup($req, $res, $args): Response
     {
         if ($this->isAuth()) {
-            return $this->redirect('/');
+            return $res->withRedirect($this->pathFor('home.page'));
         }
-        return $this->render("login.phtml", ['error' => '']);
     }
 
-    public function post(): Response
+    public function login($req, $res, $args): Response
     {
-        $email = $this->req->getParam('email');
-        $password = $this->req->getParam('password');
+        if ($this->isAuth()) {
+            return $res->withRedirect($this->pathFor('home.page'));
+        }
+
+        return $this->render($res, "login.phtml", [
+            'error' => '',
+            'router' => $this->container->get('router')
+        ]);
+    }
+
+    public function authenticate($req, $res, $args): Response
+    {
+        $email = $req->getParam('email');
+        $password = $req->getParam('password');
 
         $user_id = $this->validate($email, $password);
 
@@ -48,9 +60,30 @@ class LoginController extends Controller
 
             setcookie("id", $db->lastInsertId(), time()+60*60*24*365);
             setcookie("value", $value, time()+60*60*24*365);
-            return $this->redirect('/');
+
+            return $res->withRedirect($this->pathFor('home.page'));
         } else {
-            return $this->render("login.phtml", ['error' => 'Неправильный логин или пароль']);
+            return $this->render($res, "login.phtml", [
+                'error' => 'Неправильный логин или пароль',
+                'router' => $this->container->get('router')
+            ]);
         }
+    }
+
+    public function logout($req, $res, $args): Response
+    {
+        if (isset($_COOKIE['id'], $_COOKIE['value'])) {
+            $db = $this->container->get('pdo');
+            try {
+                $stmt = $db->prepare("DELETE FROM cookies WHERE `id` = ? AND `value` = ?");
+                $stmt->execute([$_COOKIE['id'], $_COOKIE['value']]);
+                setcookie('id', '', 0);
+                setcookie('value', '', 0);
+            } catch (\PDOException $e) {
+                echo "Неудалось выполнить запрос к базе данных: " . $e->getMessage();
+                exit(-1);
+            }
+        }
+        return $res->withRedirect($this->pathFor('login.page'));
     }
 }

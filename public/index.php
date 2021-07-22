@@ -12,7 +12,7 @@ $config['db']['user'] = 'root';
 $config['db']['password'] = '';
 $config['db']['dbname'] = 'efco';
 
-$app = new Core\App(['settings' => $config]);
+$app = new Slim\App(['settings' => $config]);
 
 $container = $app->getContainer();
 $container['view'] = new PhpRenderer("../templates/");
@@ -24,12 +24,12 @@ $container['pdo'] = function ($c) {
     return $pdo;
 };
 
-$app->get("/", HomeController::class);
+$app->get("/", HomeController::class . ":home")->setName('home.page');
 
-$app->get("/login", LoginController::class);
-$app->post("/login", LoginController::class);
+$app->get("/login", LoginController::class . ":login")->setName('login.page');
+$app->post("/login", LoginController::class . ":authenticate")->setName('auth.action');
 
-$app->get("/logout", LogoutController::class);
+$app->get("/logout", LoginController::class . ":logout")->setName("logout.action");
 
 try {
     $app->run();
