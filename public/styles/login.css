@@ -1,19 +1,19 @@
 html, body{
     padding: 0;
     margin: 0;
-    font-family: monospace;
     font-weight: normal;
-    font-size: 25px;
+    font-size: 1rem;
     text-align: center;
 }
 
 .login_box{
+    font-family: monospace;
     width: 350px;
-    height: 270px;
+    /*height: 270px;*/
     background-color: #fff;
     border: 2px solid #333;
     margin: 150px auto 0 auto;
-    padding: 20px 10px;
+    padding: 20px 10px 10px 10px;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -84,7 +84,7 @@ input[type="checkbox"]:checked{
     font-size: 18px;
     width: 100px;
     height: 40px;
-    margin: auto auto 10px auto;
+    margin: 10px auto 10px auto;
     transition: color 300ms, background-color 300ms;
 }
 

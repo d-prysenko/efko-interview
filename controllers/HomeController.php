@@ -14,13 +14,17 @@ class HomeController extends Controller
         }
 
         $db = $this->container->get('pdo');
-        $stmt = $db->prepare('SELECT role FROM users, cookies WHERE cookies.value = ? AND users.id = cookies.user_id');
+        $stmt = $db->prepare('SELECT users.id, role FROM users, cookies WHERE cookies.value = ?');
         $stmt->execute([$_COOKIE['value']]);
-        $role = $stmt->fetchColumn();
+        $user = $stmt->fetch();
 
-        return $this->render($res, "index.phtml", [
+        $rows = $db->query("SELECT * FROM problems")->fetchAll();
+
+        return $this->render($res, "home.twig", [
             'router' => $this->container->get('router'),
-            'role' => $role
+            'user' => $user,
+            'rows' => $rows
         ]);
     }
+
 }

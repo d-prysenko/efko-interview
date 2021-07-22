@@ -38,7 +38,7 @@ class LoginController extends Controller
             return $res->withRedirect($this->pathFor('home.page'));
         }
 
-        return $this->render($res, "login.phtml", [
+        return $this->render($res, "login.twig", [
             'error' => '',
             'router' => $this->container->get('router')
         ]);
@@ -63,7 +63,7 @@ class LoginController extends Controller
 
             return $res->withRedirect($this->pathFor('home.page'));
         } else {
-            return $this->render($res, "login.phtml", [
+            return $this->render($res, "login.twig", [
                 'error' => 'Неправильный логин или пароль',
                 'router' => $this->container->get('router')
             ]);
