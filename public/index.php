@@ -2,6 +2,7 @@
 require "../vendor/autoload.php";
 
 use App\Controller\HomeController;
+use App\Controller\ProblemsController;
 use App\Controller\LoginController;
 use App\Controller\ProfileController;
 use Slim\Views\Twig;
@@ -36,6 +37,11 @@ $container['pdo'] = function ($c) {
 };
 
 $app->get("/", HomeController::class . ":home")->setName('home.page');
+
+$app->post("/rating-update", ProblemsController::class . ":ratingUpdate")->setName('ratingUpdate.action');
+$app->post("/add-problem", ProblemsController::class . ":addProblem")->setName('problemAdd.action');
+$app->post("/delete-entry", ProblemsController::class . ":deleteEntry")->setName('deleteEntry.action');
+
 
 $app->get("/login", LoginController::class . ":login")->setName('login.page');
 $app->post("/login", LoginController::class . ":authenticate")->setName('auth.action');

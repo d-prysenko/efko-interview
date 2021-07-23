@@ -4,15 +4,17 @@
 namespace App\Controller;
 
 use Slim\Http\Response;
+use Slim\Http\Request;
 
 class HomeController extends Controller
 {
-    public function home($req, $res, $args): Response
+    public function home(Request $req, Response $res, array $args): Response
     {
         if (!$this->isAuth()) {
             return $res->withRedirect($this->pathFor('login.page'));
         }
 
+        // TODO: get user method
         $db = $this->container->get('pdo');
         $stmt = $db->prepare('SELECT users.id, role FROM users, cookies WHERE cookies.value = ?');
         $stmt->execute([$_COOKIE['value']]);

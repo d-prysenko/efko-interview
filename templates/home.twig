@@ -1,57 +1,109 @@
 {% extends 'app.twig' %}
+{% block stylesheets %}
+    <style rel="stylesheet">
+        .w-50px{
+            min-width: 50px!important;
+            width: 50px!important;
+        }
+
+        .w-120px{
+            min-width: 120px!important;
+            width: 135px!important;
+        }
+
+        .btn-outline-secondary:hover{
+            background-color: #212529;
+            border-color: #111;
+        }
+    </style>
+{% endblock %}
 {% block content %}
-<div>
-    Тут должны быть фильтры
-</div>
-<table class="table">
-    <thead>
-    <tr>
-        <th scope="col" class="col">#</th>
-        <th scope="col" class="col-5">Проблема</th>
-        <th scope="col" class="col-5">Решение</th>
-        <th scope="col" style="width: 120px!important;">Оценка</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for row in rows %}
-    <tr>
-        <th scope="row">{{ row.id }}</th>
-        <td>{{ row.problem }}</td>
-        <td>{{ row.solution }}</td>
-        <td {{ (row.mark == 0) ? 'onmouseleave="onRatingOut(event)"' : '' }}>
-            {% if row.mark != 0 %}
-                {% for i in range(1, row.mark) %}
+    {% if user.role == 'admin' or user.role == 'writer' %}
+        <form action="/add-problem" method="post">
+            <div class="input-group mb-3">
+                <input type="text" name="problem" class="form-control" placeholder="Проблема" aria-describedby="button-addon">
+                <input type="text" name="solution" class="form-control" placeholder="Решение" aria-describedby="button-addon">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon">Добавить</button>
+            </div>
+        </form>
+    {% endif %}
 
-                    <i class="bi bi-star-fill"></i>
+    <table class="table">
+        <thead class="table-dark">
+        <tr>
+            <th scope="col" class="w-50px">#</th>
+            <th scope="col" class="col">Проблема</th>
+            <th scope="col" class="col">Решение</th>
+            <th scope="col" class="w-120px">Оценка</th>
+        </tr>
+        </thead>
+        <tbody id="entities">
+        {% for row in rows %}
+        <tr id="r-{{ row.id }}">
+            <th scope="row">{{ row.id }}</th>
+            <td>{{ row.problem }}</td>
+            <td>{{ row.solution }}</td>
+            <td>
+                {% if user.role == 'admin' or user.role == 'evaluator' %}
+                    <div class="d-inline" role="button" onclick="onRatingClick(event)" onmouseleave="onRatingOut(event)" rating="{{ row.mark }}">
+                        {% if row.mark != 0 %}
+                            {% for i in range(1, row.mark) %}
 
-                {% endfor %}
-            {% endif %}
+                                <i class="bi bi-star-fill" onmouseover="onRatingHover(event)"></i>
 
-            {% if row.mark != 5 %}
-                {% for i in range(1, 5-row.mark) %}
+                            {% endfor %}
+                        {% endif %}
 
-                    {% if row.mark == 0 %}
-                        <i class="bi bi-star" role="button" onmouseover="onRatingHover(event)" ></i>
-                    {% else %}
-                        <i class="bi bi-star"></i>
-                    {% endif %}
-{#                    <i class="bi bi-star" {{ (row.mark == 0) ? 'onmouseover="onRatingHover(event, ' ~ loop.index ~ ')"' : '' }}></i>#}
+                        {% if row.mark != 5 %}
+                            {% for i in range(1, 5-row.mark) %}
 
-                {% endfor %}
-            {% endif %}
+                                <i class="bi bi-star" onmouseover="onRatingHover(event)" ></i>
 
-{#            {% for i in range(1, 1)|slice(0, row.mark) %}#}
-{#            <i class="bi bi-star-fill"></i>#}
-{#            {% endfor %}#}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="d-inline">
+                        {% if row.mark != 0 %}
+                            {% for i in range(1, row.mark) %}
 
-{#            {% for i in range(0, 5-row.mark)|slice(0, 5-row.mark) %}#}
-{#            <i class="bi bi-star"></i>#}
-{#            {% endfor %}#}
-        </td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+                                <i class="bi bi-star-fill"></i>
+
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if row.mark != 5 %}
+                            {% for i in range(1, 5-row.mark) %}
+
+                                <i class="bi bi-star"></i>
+
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {% if user.role == 'admin' %}
+                    <div class="dropdown d-inline">
+                        <a class="nav-link dropdown-toggle d-inline p-0 link-dark" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><h6 class="dropdown-header">Редактирование</h6></li>
+                            <li><a class="dropdown-item" href="#problem">Изменить проблему</a></li>
+                            <li><a class="dropdown-item" href="#solution">Изменить решение</a></li>
+                            <li><a class="dropdown-item" href="#deleteMark">Удалить оценку</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" onclick="deleteEntry(event, {{ row.id }})">Удалить запись</a></li>
+                        </ul>
+                    </div>
+                {% endif %}
+{#                <span class="d-inline dropdown-toggle">#}
+
+{#                </span>#}
+            </td>
+
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
 
 {% block scripts %}
