@@ -8,10 +8,10 @@ use App\Controller\ProfileController;
 use Slim\Views\Twig;
 
 $config['displayErrorDetails'] = true;
-$config['db']['host'] = 'localhost';
-$config['db']['user'] = 'root';
-$config['db']['password'] = '';
-$config['db']['dbname'] = 'efco';
+//$config['db']['host'] = 'localhost';
+//$config['db']['user'] = 'root';
+//$config['db']['password'] = '';
+//$config['db']['dbname'] = 'efco';
 
 $app = new Slim\App(['settings' => $config]);
 
@@ -28,29 +28,43 @@ $container['view'] = function ($container) {
 
     return $view;
 };
-$container['pdo'] = function ($c) {
-    $db = $c['settings']['db'];
-    $pdo = new PDO('mysql:host='.$db['host'].';dbname='.$db['dbname'], $db['user'], $db['password']);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    return $pdo;
-};
-
-$app->get("/", HomeController::class . ":home")->setName('home.page');
-
-$app->post("/rating-update", ProblemsController::class . ":ratingUpdate")->setName('ratingUpdate.action');
-$app->post("/add-problem", ProblemsController::class . ":addProblem")->setName('problemAdd.action');
-$app->post("/delete-entry", ProblemsController::class . ":deleteEntry")->setName('deleteEntry.action');
 
 
-$app->get("/login", LoginController::class . ":login")->setName('login.page');
-$app->post("/login", LoginController::class . ":authenticate")->setName('auth.action');
+$app->get("/[{page:[0-9]+}]", HomeController::class . ":home")
+    ->add(new \App\Middleware\AuthMiddleware($container))
+    ->setName('home.page');
 
-$app->get("/logout", LoginController::class . ":logout")->setName("logout.action");
+$app->post("/rating-update", ProblemsController::class . ":ratingUpdate")
+    ->add(new \App\Middleware\AuthMiddleware($container))
+    ->setName('ratingUpdate.action');
 
-$app->get("/settings", ProfileController::class . ":settings")->setName('settings.page');
+$app->post("/add-problem", ProblemsController::class . ":addProblem")
+    ->add(new \App\Middleware\AuthMiddleware($container))
+    ->setName('problemAdd.action');
 
-$app->get("/adminpanel", ProfileController::class . ":adminpanel")->setName('adminpanel.page');
+$app->post("/delete-entry", ProblemsController::class . ":deleteEntry")
+    ->add(new \App\Middleware\AuthMiddleware($container))
+    ->setName('deleteEntry.action');
+
+
+$app->get("/login", LoginController::class . ":login")
+    ->add(new \App\Middleware\GuestMiddleware($container))
+    ->setName('login.page');
+
+$app->post("/login", LoginController::class . ":authenticate")
+    ->add(new \App\Middleware\GuestMiddleware($container))
+    ->setName('auth.action');
+
+$app->get("/logout", LoginController::class . ":logout")
+    ->setName("logout.action");
+
+$app->get("/settings", ProfileController::class . ":settings")
+    ->add(new \App\Middleware\AuthMiddleware($container))
+    ->setName('settings.page');
+
+$app->get("/adminpanel", ProfileController::class . ":adminpanel")
+    ->add(new \App\Middleware\AuthMiddleware($container))
+    ->setName('adminpanel.page');
 
 try {
     $app->run();
