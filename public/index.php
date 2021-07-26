@@ -8,10 +8,6 @@ use App\Controller\ProfileController;
 use Slim\Views\Twig;
 
 $config['displayErrorDetails'] = true;
-//$config['db']['host'] = 'localhost';
-//$config['db']['user'] = 'root';
-//$config['db']['password'] = '';
-//$config['db']['dbname'] = 'efco';
 
 $app = new Slim\App(['settings' => $config]);
 
@@ -21,7 +17,6 @@ $container['view'] = function ($container) {
         'cache' => false
     ]);
 
-    // Instantiate and add Slim specific extension
     $router = $container->get('router');
     $uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
     $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));

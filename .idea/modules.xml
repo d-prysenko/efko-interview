@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/efco.iml" filepath="$PROJECT_DIR$/.idea/efco.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/efko.iml" filepath="$PROJECT_DIR$/.idea/efko.iml" />
     </modules>
   </component>
 </project>

@@ -10,7 +10,7 @@ use Slim\Http\Request;
 
 class HomeController extends Controller
 {
-    protected static int $ENTITIES_LIMIT = 20;
+    protected static int $ENTITIES_LIMIT = 14;
 
     public function home(Request $req, Response $res, array $args): Response
     {

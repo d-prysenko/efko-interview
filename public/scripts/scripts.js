@@ -13,13 +13,6 @@ function onRatingHover(event)
             elems[i].className = "bi bi-star";
         }
     }
-
-    // while (elem !== null) {
-    //     elem.className = "bi bi-star-fill";
-    //     elem = elem.nextElementSibling;
-    // }
-
-    // console.log(event);
 }
 
 function onRatingOut(event)
@@ -35,10 +28,6 @@ function onRatingOut(event)
         }
     }
 
-    // while (elem != null) {
-    //     elem.className = "bi bi-star";
-    //     elem = elem.nextElementSibling;
-    // }
     event.target.removeAttribute("selected-rating");
 }
 
@@ -64,13 +53,11 @@ async function onRatingClick(event)
         }
     }
 
-    // console.log(id + ": " + new_rating);
 }
 
 async function deleteEntry(event, uid)
 {
     let row = document.getElementById('r-' + uid);
-    // let row = event.target.parentElement.parentElement.parentElement.parentElement.parentElement;
     let id = row.firstElementChild.innerText;
     let response = await fetch('/delete-entry', {
         method: 'POST',
@@ -80,13 +67,10 @@ async function deleteEntry(event, uid)
         body: "problem_id=" + id
     });
 
-    // if (response.status != 200) {
-    //     console.error("Ошибка " + response.status);
-    // }
-
-    if (response.status == 200) {
-        entities.removeChild(row);
+    if (response.status === 200) {
+        document.location.reload();
+    } else {
+        console.error("Cannot delete entry");
     }
 
-    console.log(id);
 }

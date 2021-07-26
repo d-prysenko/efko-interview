@@ -12,7 +12,7 @@ class Entities extends AbstractModel
     {
         try {
             $db = $this->getPdo();
-            $prep = $db->prepare("SELECT * FROM problems LIMIT :limit OFFSET :offset");
+            $prep = $db->prepare("SELECT * FROM problems ORDER BY id DESC LIMIT :limit OFFSET :offset");
             $prep->bindParam("limit", $limit, PDO::PARAM_INT);
             $prep->bindParam("offset", $offset, PDO::PARAM_INT);
             $prep->execute();
