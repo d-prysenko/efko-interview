@@ -8,7 +8,6 @@ class User extends AbstractModel
 {
     public ?int $id;
     public ?string $role;
-//    private \PDO $db;
 
     public function __construct()
     {
@@ -31,22 +30,6 @@ class User extends AbstractModel
 
     public function isAuth(): bool
     {
-//        if (isset($_COOKIE['id'], $_COOKIE['value'])) {
-//            $id = $_COOKIE['id'];
-//            $value = $_COOKIE['value'];
-//            $db = $this->getPdo();
-//            try {
-//                $stmt = $db->prepare("SELECT * FROM cookies WHERE `id` = ? AND `value` = ?");
-//                $stmt->execute([$id, $value]);
-//                if ($stmt->rowCount()) {
-//                    return true;
-//                }
-//            } catch (\PDOException $e) {
-//                echo "Неудалось выполнить запрос к базе данных: " . $e->getMessage();
-//                exit(-1);
-//            }
-//        }
-//        return false;
         return $this->id != 0;
     }
 
