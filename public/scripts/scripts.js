@@ -33,14 +33,14 @@ function onRatingOut(event)
 
 async function onRatingClick(event)
 {
-    let elem = ((event.target.tagName == 'I') ? event.target.parentElement : event.target );
+    let elem = ((event.target.tagName === 'I') ? event.target.parentElement : event.target );
     let new_rating = elem.getAttribute("selected-rating");
 
     if (new_rating != null) {
         let id = elem.parentNode.parentNode.firstElementChild.innerText
         elem.setAttribute("rating", new_rating);
 
-        let response = await fetch('/rating-update', {
+        let response = await fetch('/mark-update', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -48,29 +48,9 @@ async function onRatingClick(event)
             body: "problem_id=" + id + "&mark=" + new_rating
         });
 
-        if (response.status != 200) {
+        if (response.status !== 200) {
             console.error("Ошибка " + response.status);
         }
-    }
-
-}
-
-async function deleteEntry(event, uid)
-{
-    let row = document.getElementById('r-' + uid);
-    let id = row.firstElementChild.innerText;
-    let response = await fetch('/delete-entry', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: "problem_id=" + id
-    });
-
-    if (response.status === 200) {
-        document.location.reload();
-    } else {
-        console.error("Cannot delete entry");
     }
 
 }

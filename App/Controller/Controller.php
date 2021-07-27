@@ -25,6 +25,4 @@ class Controller
     {
         return $this->container->get('router')->pathFor($route_name);
     }
-
-
 }

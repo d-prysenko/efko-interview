@@ -2,7 +2,6 @@
 
 namespace App\Model;
 
-use http\Exception\InvalidArgumentException;
 use PDOException;
 
 class User extends AbstractModel
@@ -11,15 +10,17 @@ class User extends AbstractModel
     public ?string $role;
     public ?bool $verified;
 
-    public function __construct()
+    public function __construct(int $id = 0)
     {
-        $this->id = 0;
+        $this->id = $id;
         $this->role = null;
         $this->verified = false;
 
+        $db = $this->getPdo();
+
         if (isset($_COOKIE['id'], $_COOKIE['value'])) {
-            $db = $this->getPdo();
-            $stmt = $db->prepare('SELECT role, users.id, verified FROM users INNER JOIN cookies ON (users.id=cookies.user_id) WHERE cookies.id = ? AND cookies.value = ?');
+            $stmt = $db->prepare('SELECT role, users.id, verified FROM users INNER JOIN cookies
+                ON (users.id=cookies.user_id) WHERE cookies.id = ? AND cookies.value = ?');
             $stmt->execute([$_COOKIE['id'], $_COOKIE['value']]);
 
             $user = $stmt->fetch();
@@ -29,12 +30,17 @@ class User extends AbstractModel
                 $this->role = $user['role'];
                 $this->verified = $user['verified'];
             }
-        }
-    }
+        } elseif ($this->id != 0) {
+            $stmt = $db->prepare("SELECT id, role, verified FROM users WHERE id = ?");
+            $stmt->execute([$this->id]);
+            $user = $stmt->fetch();
 
-    public function isAuth(): bool
-    {
-        return $this->id != 0;
+            if ($user) {
+                $this->id = $user['id'];
+                $this->role = $user['role'];
+                $this->verified = $user['verified'];
+            }
+        }
     }
 
     public function passwordVerify($email, $password): bool
@@ -52,44 +58,12 @@ class User extends AbstractModel
 
         if ($user && password_verify($password . $user['salt'], $user['hash'])) {
             $this->id = $user['id'];
+            $this->role = $user['role'];
             $this->verified = $user['verified'];
             return true;
         }
 
         return false;
-    }
-
-    public function register($email, $password, $role, $name, $surname): bool
-    {
-        try {
-            $salt = uniqid();
-            $hash = password_hash($password.$salt, PASSWORD_DEFAULT);
-
-            $db = $this->getPdo();
-
-            $user_email = $db->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
-            $user_email->execute([$email]);
-
-            if ($user_email->fetchColumn()) {
-                throw new \InvalidArgumentException("Пользователь с такой почтой уже существует!");
-            }
-
-            $stmt = $db->prepare("INSERT INTO users VALUES (NULL, :role, false, :name, :surname, :email, :hash, :salt)");
-            $stmt->execute([
-                ':role' => $role,
-                ':name' => $name,
-                ':surname' => $surname,
-                ':email' => $email,
-                ':hash' => $hash,
-                ':salt' => $salt
-            ]);
-
-            $this->id = $db->lastInsertId();
-        } catch (PDOException $e) {
-            throw $e;
-        }
-
-        return true;
     }
 
     public function setCookies()
@@ -123,6 +97,11 @@ class User extends AbstractModel
                 exit(-1);
             }
         }
+    }
+
+    public function isAuth(): bool
+    {
+        return $this->id != 0;
     }
 
     public function isAdmin(): bool

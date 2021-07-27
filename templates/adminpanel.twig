@@ -88,7 +88,7 @@
                         <td>{{ user['email'] }}</td>
                         <td>{{ user['role'] == 'writer' ? 'Составитель' : 'Оценщик' }}</td>
                         <td class="text-end">
-                            <form action="{{ path_for('user.accept.action') }}" method="post">
+                            <form action="{{ path_for('userAccept.action') }}" method="post">
                                 <button type="submit" name="id" value="{{ user['id'] }}" class="btn btn-outline-primary pt-1">Одобрить</button>
                                 <button type="reset" class="btn btn-danger pt-1">Скрыть</button>
                             </form>

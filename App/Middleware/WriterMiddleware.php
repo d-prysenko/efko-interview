@@ -6,12 +6,12 @@ namespace App\Middleware;
 use App\Model\User;
 use Slim\Http\Response;
 
-class AdminMiddleware extends Middleware
+class WriterMiddleware extends Middleware
 {
     public function __invoke($req, Response $res, $next): Response
     {
         $user = new User();
-        if (!$user->isAdmin()) {
+        if (!$user->isAdmin() && !$user->isWriter()) {
             return $res->withStatus(403);
         }
 

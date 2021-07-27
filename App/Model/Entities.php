@@ -50,7 +50,8 @@ class Entities extends AbstractModel
     {
         try {
             $db = $this->getPdo();
-            $prep = $db->prepare("SELECT COUNT(*) as `count`, users.email FROM `problems` INNER JOIN users ON (users.id = problems.writer_id) GROUP BY writer_id ORDER BY `count` DESC LIMIT 10");
+            $prep = $db->prepare("SELECT COUNT(*) as `count`, users.email FROM `problems` INNER JOIN users
+    ON (users.id = problems.writer_id) GROUP BY writer_id ORDER BY `count` DESC LIMIT 10");
             $prep->execute();
             return $prep->fetchAll();
         } catch (PDOException $e) {
@@ -62,7 +63,8 @@ class Entities extends AbstractModel
     {
         try {
             $db = $this->getPdo();
-            $prep = $db->prepare("SELECT COUNT(*) as `count`, users.email FROM `problems` INNER JOIN users ON (users.id = problems.evaluator_id) GROUP BY evaluator_id ORDER BY `count` DESC LIMIT 10");
+            $prep = $db->prepare("SELECT COUNT(*) as `count`, users.email FROM `problems` INNER JOIN users 
+    ON (users.id = problems.evaluator_id) GROUP BY evaluator_id ORDER BY `count` DESC LIMIT 10");
             $prep->execute();
             return $prep->fetchAll();
         } catch (PDOException $e) {
@@ -94,7 +96,7 @@ class Entities extends AbstractModel
         return true;
     }
 
-    public function setMark(int $entity_id, int $evaluator_id, int $mark): bool
+    public function setMark(int $entity_id, $evaluator_id, $mark): bool
     {
         try {
             $db = $this->getPdo();
@@ -106,4 +108,8 @@ class Entities extends AbstractModel
         return true;
     }
 
+    public function deleteMark(int $entity_id): bool
+    {
+        return $this->setMark($entity_id, null, null);
+    }
 }

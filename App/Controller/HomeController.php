@@ -4,7 +4,6 @@
 namespace App\Controller;
 
 use App\Model\Entities;
-use App\Model\User;
 use Slim\Http\Response;
 use Slim\Http\Request;
 

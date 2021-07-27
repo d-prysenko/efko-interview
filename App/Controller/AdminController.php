@@ -9,13 +9,8 @@ use App\Model\Users;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class ProfileController extends Controller
+class AdminController extends Controller
 {
-    public function settings(Request $req, Response $res, array $args): Response
-    {
-        return $this->render($res, "settings.twig");
-    }
-
     public function adminPanel(Request $req, Response $res, array $args): Response
     {
         $problems = new Entities();
@@ -36,7 +31,7 @@ class ProfileController extends Controller
         $user_id = $req->getParam('id');
 
         if ($users->accept($user_id)) {
-            return $res->withRedirect($this->pathFor('adminpanel.page'));
+            return $res->withRedirect($this->pathFor('adminPanel.page'));
         }
 
         return $res->withStatus(500);

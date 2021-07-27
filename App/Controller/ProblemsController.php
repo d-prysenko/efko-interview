@@ -6,22 +6,18 @@ namespace App\Controller;
 use App\Model\Entities;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use \App\Model\User;
+use App\Model\User;
 
 class ProblemsController extends Controller
 {
-    public function ratingUpdate(Request $req, Response $res, array $args): Response
+    public function markUpdate(Request $req, Response $res, array $args): Response
     {
         $user = new User();
         $problem_id = $req->getParam('problem_id');
         $mark = $req->getParam('mark');
 
-        if (!$user->isAdmin() && !$user->isEvaluator()) {
-            return $res->withStatus(403);
-        }
-
-        if ($mark < 1 || $mark > 5) {
-            return $res->withStatus(403);
+        if ($mark < 0 || $mark > 5) {
+            return $res->withStatus(400);
         }
 
         $ents = new Entities();
@@ -30,39 +26,59 @@ class ProblemsController extends Controller
             return $res->withStatus(200);
         }
 
-        return $res->withStatus(404);
+        return $res->withStatus(500);
     }
 
     public function addProblem(Request $req, Response $res, array $args): Response
     {
         $user = new User();
 
-        if ($user->isAdmin() || $user->isWriter()) {
-            $problem = $req->getParam('problem');
-            $solution = $req->getParam('solution');
+        $problem = $req->getParam('problem');
+        $solution = $req->getParam('solution');
 
-            $ents = new Entities();
-            $ents->addEntity($user->id, $problem, $solution);
-
+        $ents = new Entities();
+        if ($ents->addEntity($user->id, $problem, $solution)) {
             return $res->withRedirect($this->pathFor('home.page'));
         }
-        return $res->withStatus(403);
+
+        return $res->withStatus(500);
     }
 
-    public function deleteEntry(Request $req, Response $res, array $args): Response
+    public function deleteProblem(Request $req, Response $res, array $args): bool
     {
+        $entity_id = $req->getParam('id');
 
-        $user = new User();
+        $ents = new Entities();
 
-        if ($user->isAdmin()) {
-            $entity_id = $req->getParam('problem_id');
+        return $ents->deleteEntity($entity_id);
+    }
 
-            $ents = new Entities();
-            $ents->deleteEntity($entity_id);
+    public function deleteMark(Request $req, Response $res, array $args): bool
+    {
+        $entity_id = $req->getParam('id');
 
-            return $res->withStatus(200);
+        $ents = new Entities();
+
+        return $ents->setMark($entity_id, null, null);
+    }
+
+    public function edit(Request $req, Response $res, array $args): Response
+    {
+        $action = $req->getParam('action');
+
+        switch ($action) {
+            case "delete-row":
+                if (!$this->deleteProblem($req, $res, $args)) {
+                    return $res->withStatus(500);
+                }
+                break;
+            case "delete-mark":
+                if (!$this->deleteMark($req, $res, $args)) {
+                    return $res->withStatus(500);
+                }
+                break;
         }
 
-        return $res->withStatus(403);
+        return $res->withRedirect($this->pathFor('home.page'));
     }
 }

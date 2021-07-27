@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Model\User;
+use App\Model\Users;
 use Slim\Http\Response;
 use Slim\Http\Request;
 
@@ -17,7 +18,7 @@ class LoginController extends Controller
         ]);
     }
 
-    public function authenticate(Request $req, Response $res, array $args): Response
+    public function auth(Request $req, Response $res, array $args): Response
     {
         $email = $req->getParam('email');
         $password = $req->getParam('password');
@@ -54,9 +55,8 @@ class LoginController extends Controller
         }
 
         try {
-            $user = new User();
-            $user->register($email, $password, $role, $name, $surname);
-            $user->setCookies();
+            $users = new Users();
+            $users->register($email, $password, $role, $name, $surname)->setCookies();
             return $res->withRedirect($this->pathFor('home.page'));
         } catch (\Exception $e) {
             return $this->render($res, 'register.twig', ['error' => $e->getMessage()]);

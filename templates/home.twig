@@ -48,58 +48,47 @@
             <td>{{ row.problem }}</td>
             <td>{{ row.solution }}</td>
             <td>
+
                 {% if user.role == 'admin' or user.role == 'evaluator' %}
                     <div class="d-inline" role="button" onclick="onRatingClick(event)" onmouseleave="onRatingOut(event)" rating="{{ row.mark }}">
-                        {% if row.mark != 0 %}
-                            {% for i in range(1, row.mark) %}
-
-                                <i class="bi bi-star-fill" onmouseover="onRatingHover(event)"></i>
-
-                            {% endfor %}
-                        {% endif %}
-
-                        {% if row.mark != 5 %}
-                            {% for i in range(1, 5-row.mark) %}
-
-                                <i class="bi bi-star" onmouseover="onRatingHover(event)" ></i>
-
-                            {% endfor %}
-                        {% endif %}
-                    </div>
+                    {% set action = 'onmouseover="onRatingHover(event)"' %}
                 {% else %}
                     <div class="d-inline">
-                        {% if row.mark != 0 %}
-                            {% for i in range(1, row.mark) %}
-
-                                <i class="bi bi-star-fill"></i>
-
-                            {% endfor %}
-                        {% endif %}
-
-                        {% if row.mark != 5 %}
-                            {% for i in range(1, 5-row.mark) %}
-
-                                <i class="bi bi-star"></i>
-
-                            {% endfor %}
-                        {% endif %}
-                    </div>
+                    {% set action = '' %}
                 {% endif %}
+
+                {% if row.mark != 0 %}
+                    {% for i in range(1, row.mark) %}
+
+                        <i class="bi bi-star-fill" {{ action|raw }}></i>
+
+                    {% endfor %}
+                {% endif %}
+
+                {% if row.mark != 5 %}
+                    {% for i in range(1, 5-row.mark) %}
+
+                        <i class="bi bi-star" {{ action|raw }}></i>
+
+                    {% endfor %}
+                {% endif %}
+                </div>
+
                 {% if user.role == 'admin' %}
                     <div class="dropdown d-inline">
-                        <a class="nav-link dropdown-toggle d-inline p-0 link-dark" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle d-inline p-0 link-dark" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         </a>
-{#                        <form method="post" action="{{ path_for('admin.edit.action') }}">#}
-{#                            <input type="hidden" value="{{ row.id }}">#}
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><h6 class="dropdown-header">Редактирование</h6></li>
-                                <li><a class="dropdown-item" href="#problem">Изменить проблему</a></li>
-                                <li><a class="dropdown-item" href="#solution">Изменить решение</a></li>
-                                <li><a class="dropdown-item" href="#deleteMark">Удалить оценку</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" onclick="deleteEntry(event, {{ row.id }})">Удалить запись</a></li>
+                        <form method="post" action="{{ path_for('admin.edit.action') }}" class="dropdown-menu dropdown-menu-end">
+                            <input type="hidden" name="id" value="{{ row.id }}">
+                            <ul class="p-0 m-0" style="list-style-type: none;">
+                                    <li><h6 class="dropdown-header">Редактирование</h6></li>
+                                    <li><a class="dropdown-item" href="#problem">Изменить проблему</a></li>
+                                    <li><a class="dropdown-item" href="#solution">Изменить решение</a></li>
+                                    <li><button name="action" value="delete-mark" class="dropdown-item">Удалить оценку</button></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><button name="action" value="delete-row" class="dropdown-item">Удалить запись</button></li>
                             </ul>
-{#                        </form>#}
+                        </form>
                     </div>
                 {% endif %}
 

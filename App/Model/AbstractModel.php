@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use \App\Database\Database;
+use App\Database\Database;
 use PDO;
 
 abstract class AbstractModel
