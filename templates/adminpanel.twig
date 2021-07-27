@@ -1,4 +1,105 @@
 {% extends 'app.twig' %}
+{% block nav_content %}
+    {% include 'components/nav_dropdown.twig' %}
+{% endblock %}
 {% block content %}
-    Admin panel
+    <div class="container">
+        <div class="row">
+            {% set rated_problems = (rated_problems_count / problems_count * 100)|number_format(2) %}
+            <div class="progress ps-0 pe-0">
+                <div class="progress-bar" role="progressbar" style="width: {{ rated_problems }}%" aria-valuenow="{{ rated_problems }}" aria-valuemin="0" aria-valuemax="100">{{ rated_problems }}%</div>
+            </div>
+            <div class="row">
+                <div class="col text-center">Всего проблем: {{ problems_count }}</div>
+                <div class="col text-center">Оценено: {{ rated_problems_count }} ({{ rated_problems }}%)<br></div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col ps-0">
+                <table class="table caption-top">
+                    <caption>
+                        Топ составителей
+                    </caption>
+                    <thead class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col" class="col-7">e-mail</th>
+                        <th scope="col">Составлено записей</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for writer in active_writers %}
+                        <tr>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>{{ writer['email'] }}</td>
+                            <td>{{ writer['count'] }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col pe-0">
+                <table class="table caption-top">
+                    <caption>
+                        Топ оценщиков
+                    </caption>
+                    <thead class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col" class="col-7">e-mail</th>
+                        <th scope="col">Оценено записей</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for rater in active_raters %}
+                        <tr>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>{{ rater['email'] }}</td>
+                            <td>{{ rater['count'] }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <table class="table caption-top">
+                <caption>
+                    Новые пользователи, ожидающие проверку
+                </caption>
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col" class="col-2">Имя</th>
+                    <th scope="col" class="col-2">Фамилия</th>
+                    <th scope="col" class="col-3">Почта</th>
+                    <th scope="col" class="col">Роль</th>
+                    <th scope="col" class="" style="width: 200px">Действие</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in new_users %}
+                    <tr class="align-middle">
+                        <th scope="row">{{ user['id'] }}</th>
+                        <td>{{ user['name'] }}</td>
+                        <td>{{ user['surname'] }}</td>
+                        <td>{{ user['email'] }}</td>
+                        <td>{{ user['role'] == 'writer' ? 'Составитель' : 'Оценщик' }}</td>
+                        <td class="text-end">
+                            <form action="{{ path_for('user.accept.action') }}" method="post">
+                                <button type="submit" name="id" value="{{ user['id'] }}" class="btn btn-outline-primary pt-1">Одобрить</button>
+                                <button type="reset" class="btn btn-danger pt-1">Скрыть</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
 {% endblock %}

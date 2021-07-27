@@ -14,17 +14,19 @@ class HomeController extends Controller
 
     public function home(Request $req, Response $res, array $args): Response
     {
-        if (!isset($args['page'])) {
-            $args['page'] = '0';
+        if (!isset($args['page']) || $args['page'] == 0) {
+            $args['page'] = '1';
         }
 
-        $user = new User();
         $problems = new Entities();
+
+        $pages_count = ceil($problems->rowsCount() / static::$ENTITIES_LIMIT);
 
         return $this->render($res, "home.twig", [
             'router' => $this->container->get('router'),
-            'user' => $user,
-            'rows' => $problems->fetch(static::$ENTITIES_LIMIT, static::$ENTITIES_LIMIT * $args['page'])
+            'rows' => $problems->fetch(static::$ENTITIES_LIMIT, static::$ENTITIES_LIMIT * ($args['page'] - 1)),
+            'page' => $args['page'],
+            'pages_count' => $pages_count
         ]);
     }
 }

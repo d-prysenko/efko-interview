@@ -17,6 +17,10 @@
         }
     </style>
 {% endblock %}
+{% block nav_content %}
+    {% include 'components/nav_dropdown.twig' %}
+{% endblock %}
+
 {% block content %}
     {% if user.role == 'admin' or user.role == 'writer' %}
         <form action="/add-problem" method="post">
@@ -85,25 +89,88 @@
                     <div class="dropdown d-inline">
                         <a class="nav-link dropdown-toggle d-inline p-0 link-dark" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><h6 class="dropdown-header">Редактирование</h6></li>
-                            <li><a class="dropdown-item" href="#problem">Изменить проблему</a></li>
-                            <li><a class="dropdown-item" href="#solution">Изменить решение</a></li>
-                            <li><a class="dropdown-item" href="#deleteMark">Удалить оценку</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" onclick="deleteEntry(event, {{ row.id }})">Удалить запись</a></li>
-                        </ul>
+{#                        <form method="post" action="{{ path_for('admin.edit.action') }}">#}
+{#                            <input type="hidden" value="{{ row.id }}">#}
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><h6 class="dropdown-header">Редактирование</h6></li>
+                                <li><a class="dropdown-item" href="#problem">Изменить проблему</a></li>
+                                <li><a class="dropdown-item" href="#solution">Изменить решение</a></li>
+                                <li><a class="dropdown-item" href="#deleteMark">Удалить оценку</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" onclick="deleteEntry(event, {{ row.id }})">Удалить запись</a></li>
+                            </ul>
+{#                        </form>#}
                     </div>
                 {% endif %}
-{#                <span class="d-inline dropdown-toggle">#}
 
-{#                </span>#}
             </td>
 
         </tr>
         {% endfor %}
         </tbody>
     </table>
+{% endblock %}
+
+{% block footer %}
+
+    {% if pages_count > 1 %}
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {% if page > 1 %}
+                    {% set prev_btn_disabled = false %}
+                {% else %}
+                    {% set prev_btn_disabled = true %}
+                {% endif %}
+
+                {% if page != pages_count %}
+                    {% set next_btn_disabled = false %}
+                {% else %}
+                    {% set next_btn_disabled = true %}
+                {% endif %}
+
+                <li class="page-item {{ prev_btn_disabled ? 'disabled' : '' }}">
+                    <a class="page-link" href="/{{ page - 1 }}" tabindex="-1"  aria-disabled="{{ prev_btn_disabled }}">Назад</a>
+                </li>
+
+                {% set nav_size = 11 %}
+
+                {% if pages_count < nav_size %}
+                    {% for i in 1..pages_count %}
+                        {% if i == page %}
+                            <li class="page-item active"><a class="page-link" href="/{{ i }}">{{ i }}</a></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="/{{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+
+                    {% if page - nav_size // 2 <= 0 %}
+                        {% set start = 1 %}
+                        {% set end = start + nav_size - 1 %}
+                    {% elseif page + nav_size // 2 >= pages_count %}
+                        {% set end = pages_count %}
+                        {% set start = end - nav_size %}
+                    {% else %}
+                        {% set start = page - nav_size // 2 %}
+                        {% set end = page + nav_size // 2 %}
+                    {% endif %}
+
+                    {% for i in start..end %}
+                        {% if i == page %}
+                            <li class="page-item active"><a class="page-link" href="/{{ i }}">{{ i }}</a></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="/{{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                <li class="page-item {{ next_btn_disabled ? 'disabled' : '' }}">
+                    <a class="page-link" href="/{{ page + 1 }}" aria-disabled="{{ next_btn_disabled }}">Вперед</a>
+                </li>
+
+            </ul>
+        </nav>
+    {% endif %}
 {% endblock %}
 
 {% block scripts %}

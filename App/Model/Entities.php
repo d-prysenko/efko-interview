@@ -22,6 +22,54 @@ class Entities extends AbstractModel
         }
     }
 
+    public function rowsCount(): int
+    {
+        try {
+            $db = $this->getPdo();
+            $prep = $db->prepare("SELECT COUNT(*) FROM problems");
+            $prep->execute();
+            return $prep->fetchColumn();
+        } catch (PDOException $e) {
+            return 0;
+        }
+    }
+
+    public function ratedCount(): int
+    {
+        try {
+            $db = $this->getPdo();
+            $prep = $db->prepare("SELECT COUNT(*) FROM problems WHERE mark IS NOT NULL");
+            $prep->execute();
+            return $prep->fetchColumn();
+        } catch (PDOException $e) {
+            return 0;
+        }
+    }
+
+    public function getActiveWriters(): array
+    {
+        try {
+            $db = $this->getPdo();
+            $prep = $db->prepare("SELECT COUNT(*) as `count`, users.email FROM `problems` INNER JOIN users ON (users.id = problems.writer_id) GROUP BY writer_id ORDER BY `count` DESC LIMIT 10");
+            $prep->execute();
+            return $prep->fetchAll();
+        } catch (PDOException $e) {
+            return array('0' => ['email'=>'error']);
+        }
+    }
+
+    public function getActiveEvaluators(): array
+    {
+        try {
+            $db = $this->getPdo();
+            $prep = $db->prepare("SELECT COUNT(*) as `count`, users.email FROM `problems` INNER JOIN users ON (users.id = problems.evaluator_id) GROUP BY evaluator_id ORDER BY `count` DESC LIMIT 10");
+            $prep->execute();
+            return $prep->fetchAll();
+        } catch (PDOException $e) {
+            return array('0' => ['email'=>'error']);
+        }
+    }
+
     public function addEntity(int $writer_id, string $problem, string $solution): bool
     {
         try {

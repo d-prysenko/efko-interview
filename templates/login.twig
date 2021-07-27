@@ -2,6 +2,9 @@
 {% block stylesheets %}
     <link rel="stylesheet" href="/styles/login.css">
 {% endblock %}
+{% block nav_content %}
+    <a class="link-dark" href="{{ path_for('signup.page') }}">Регистрация</a>
+{% endblock %}
 {% block content %}
     <div class="login_box">
         <div style="margin-bottom: 30px;font-size: 25px;">Авторизация</div>
@@ -19,32 +22,3 @@
         {{ error }}
     </div>
 {% endblock %}
-{#<!doctype html>#}
-{#<html lang="ru">#}
-{#<head>#}
-{#    <meta charset="UTF-8">#}
-{#    <meta name="viewport"#}
-{#          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">#}
-{#    <meta http-equiv="X-UA-Compatible" content="ie=edge">#}
-{#    <link rel="stylesheet" href="/styles/login.css">#}
-{#    <title>Login</title>#}
-{#</head>#}
-{#<body>#}
-
-{#<div class="login_box">#}
-{#    <div style="margin-bottom: 30px;">Авторизация</div>#}
-{#    <form method="post" name="login_form" class="login_form" action="{{ path_for('auth.action') }}">#}
-{#        <input name="email" placeholder="e-mail" class="input"><br>#}
-{#        <input name="password" type="password" placeholder="password" class="input">#}
-{#        <div class="chbox">#}
-{#            <input type="checkbox" id="show_pass">#}
-{#            <label class="checkbox_label" for="show_pass">Показать пароль</label>#}
-{#        </div>#}
-{#        <button type="submit" name="submit" class="btn_submit">Войти</button>#}
-{#    </form>#}
-{#</div>#}
-{#<div style="margin-top: 10px; color: red; font-size: 16px;">#}
-{#    {{ error }}#}
-{#</div>#}
-{#</body>#}
-{#</html>#}

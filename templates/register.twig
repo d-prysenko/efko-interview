@@ -1,0 +1,59 @@
+{% extends 'app.twig' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="/styles/login.css">
+{% endblock %}
+{% block content %}
+
+    <form class="container w-50" method="post" action="{{ path_for('signup.action') }}">
+
+        <div style="font-size: 25px">Регистрация</div>
+        <div class="input-group mt-5">
+            <span class="input-group-text">Имя и фамилия</span>
+            <input id="i_name" name="name" type="text" aria-label="Имя" class="form-control">
+            <input id="surname" name="surname" type="text" aria-label="Фамилия" class="form-control">
+        </div>
+        <div class="input-group mt-2">
+            <span class="input-group-text">Почта</span>
+            <input name="email" id="email" type="text" aria-label="Почта" class="form-control">
+        </div>
+        <div class="input-group mt-2">
+            <span class="input-group-text">Пароль</span>
+            <input name="password" id="password" type="password" aria-label="Пароль" class="form-control">
+        </div>
+        <div id="passwordHelpBlock" class="text-start form-text">
+            Пароль должен быть 8-20 символов в длину.
+        </div>
+        <div class="input-group mt-2">
+            <label class="input-group-text" for="inputGroupSelect01">Роль</label>
+            <select id="role" name="role" class="form-select" id="inputGroupSelect01">
+                <option selected></option>
+                <option value="writer">Создавать записи</option>
+                <option value="evaluator">Оценивать записи</option>
+            </select>
+        </div>
+        <div style="margin-top: 10px; color: red; font-size: 16px;">
+            {{ error }}
+        </div>
+
+        <button type="submit" id="submit_btn" class="btn btn-primary mt-5" disabled>
+            Зарегистрироваться
+        </button>
+
+    </form>
+
+{#    <div class="login_box">#}
+{#        <div style="margin-bottom: 20px;font-size: 25px;">Регистрация</div>#}
+{#        <form method="post" name="login_form" class="login_form" action="{{ path_for('signup.action') }}">#}
+{#            <input name="email" placeholder="e-mail" class="input">#}
+{#            <input name="password" type="password" placeholder="password" class="input">#}
+{#            <input type="password" placeholder="password" class="input">#}
+{#            <button type="submit" name="submit" class="btn_submit">Зарегистрироваться</button>#}
+{#        </form>#}
+{#    </div>#}
+{#    <div style="margin-top: 10px; color: red; font-size: 16px;">#}
+{#        {{ error }}#}
+{#    </div>#}
+{% endblock %}
+{% block scripts %}
+    <script src="/scripts/reg.js"></script>
+{% endblock %}

@@ -2,12 +2,12 @@
 
 namespace App\Controller;
 
+use App\Model\User;
 use Psr\Container\ContainerInterface;
 
 class Controller
 {
     protected ContainerInterface $container;
-    protected array $params;
 
     public function __construct(ContainerInterface $container)
     {
@@ -16,6 +16,8 @@ class Controller
 
     public function render($res, $template, $params = [])
     {
+        $user = new User();
+        $params['user'] = $user;
         return $this->container->get('view')->render($res, $template, $params);
     }
 

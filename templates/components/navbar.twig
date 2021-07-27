@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid w-75">
-        <label class="navbar-brand">EFKO | Цифровые решения</label>
-        {% if user is defined %}
+        <a href="/" class="navbar-brand">EFKO | Цифровые решения</a>
+        {% if user.id != 0 %}
         <ul class="navbar-nav mb-2 mb-lg-0">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -20,6 +20,8 @@
                 </ul>
             </li>
         </ul>
+        {% else %}
+            <a class="link-dark" href="{{ path_for('signup.page') }}">Регистрация</a>
         {% endif %}
     </div>
 </nav>
