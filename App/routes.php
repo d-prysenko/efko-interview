@@ -6,10 +6,15 @@ use App\Controller\ProblemsController;
 use App\Controller\AdminController;
 use App\Controller\SettingsController;
 
+// ok, if user is authenticated
 use App\Middleware\AuthMiddleware;
+// ok, if user is not authenticated
 use App\Middleware\GuestMiddleware;
+// ok, if user is admin
 use App\Middleware\AdminMiddleware;
+// ok, if user is evaluator or admin
 use App\Middleware\EvaluatorMiddleware;
+// ok, if user is writer or admin
 use App\Middleware\WriterMiddleware;
 
 $app->get("/login", LoginController::class . ":login")

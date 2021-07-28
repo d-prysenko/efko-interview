@@ -3,7 +3,7 @@
 
 namespace App\Controller;
 
-use App\Model\Entities;
+use App\Model\Problems;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use App\Model\User;
@@ -20,9 +20,9 @@ class ProblemsController extends Controller
             return $res->withStatus(400);
         }
 
-        $ents = new Entities();
+        $problems = new Problems();
 
-        if ($ents->setMark($problem_id, $user->id, $mark)) {
+        if ($problems->setMark($problem_id, $user->id, $mark)) {
             return $res->withStatus(200);
         }
 
@@ -36,8 +36,8 @@ class ProblemsController extends Controller
         $problem = $req->getParam('problem');
         $solution = $req->getParam('solution');
 
-        $ents = new Entities();
-        if ($ents->addEntity($user->id, $problem, $solution)) {
+        $problems = new Problems();
+        if ($problems->addEntity($user->id, $problem, $solution)) {
             return $res->withRedirect($this->pathFor('home.page'));
         }
 
@@ -48,18 +48,18 @@ class ProblemsController extends Controller
     {
         $entity_id = $req->getParam('id');
 
-        $ents = new Entities();
+        $problems = new Problems();
 
-        return $ents->deleteEntity($entity_id);
+        return $problems->deleteEntity($entity_id);
     }
 
     public function deleteMark(Request $req, Response $res, array $args): bool
     {
         $entity_id = $req->getParam('id');
 
-        $ents = new Entities();
+        $problems = new Problems();
 
-        return $ents->setMark($entity_id, null, null);
+        return $problems->setMark($entity_id, null, null);
     }
 
     public function edit(Request $req, Response $res, array $args): Response

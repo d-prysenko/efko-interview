@@ -3,6 +3,7 @@ require "../vendor/autoload.php";
 
 use Slim\Views\Twig;
 
+// While debugging
 $config['displayErrorDetails'] = true;
 
 $app = new Slim\App(['settings' => $config]);
@@ -25,5 +26,5 @@ require __DIR__ . "/../App/routes.php";
 try {
     $app->run();
 } catch (Throwable $e) {
-    echo "Че-та дропнулось: " . $e->getMessage();
+    echo "Slip application run() method error: " . $e->getMessage();
 }

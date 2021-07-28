@@ -3,7 +3,7 @@
 
 namespace App\Controller;
 
-use App\Model\Entities;
+use App\Model\Problems;
 use Slim\Http\Response;
 use Slim\Http\Request;
 
@@ -17,7 +17,7 @@ class HomeController extends Controller
             $args['page'] = '1';
         }
 
-        $problems = new Entities();
+        $problems = new Problems();
 
         $pages_count = ceil($problems->rowsCount() / static::$ENTITIES_LIMIT);
 

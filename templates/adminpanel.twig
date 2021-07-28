@@ -13,7 +13,6 @@
                 <div class="col text-center">Всего проблем: {{ problems_count }}</div>
                 <div class="col text-center">Оценено: {{ rated_problems_count }} ({{ rated_problems }}%)<br></div>
             </div>
-
         </div>
         <div class="row">
             <div class="col ps-0">
@@ -87,10 +86,10 @@
                         <td>{{ user['surname'] }}</td>
                         <td>{{ user['email'] }}</td>
                         <td>{{ user['role'] == 'writer' ? 'Составитель' : 'Оценщик' }}</td>
-                        <td class="text-end">
+                        <td class="">
                             <form action="{{ path_for('userAccept.action') }}" method="post">
                                 <button type="submit" name="id" value="{{ user['id'] }}" class="btn btn-outline-primary pt-1">Одобрить</button>
-                                <button type="reset" class="btn btn-danger pt-1">Скрыть</button>
+{#                                <button type="reset" class="btn btn-danger pt-1">Скрыть</button>#}
                             </form>
                         </td>
                     </tr>

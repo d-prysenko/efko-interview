@@ -3,8 +3,7 @@
 
 namespace App\Controller;
 
-use App\Model\Entities;
-use App\Model\User;
+use App\Model\Problems;
 use App\Model\Users;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -13,7 +12,7 @@ class AdminController extends Controller
 {
     public function adminPanel(Request $req, Response $res, array $args): Response
     {
-        $problems = new Entities();
+        $problems = new Problems();
         $users = new Users();
 
         return $this->render($res, "adminpanel.twig", [

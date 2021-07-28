@@ -6,7 +6,7 @@ namespace App\Model;
 use PDO;
 use PDOException;
 
-class Entities extends AbstractModel
+class Problems extends AbstractModel
 {
     public function fetch(int $limit, int $offset): array
     {
